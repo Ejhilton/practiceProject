@@ -8,7 +8,7 @@ height = 1000
 window = Window(width, height, 0, "Practice project")
 
 # Ball info
-mainBall = Ball(window,Vector(width/2,height/2), Vector(0, 0), 500, "Blue")
+mainBall = Ball(window,Vector(width/2,height/2), Vector(0, 0), 450, "Blue")
 balls = [
 
 ]
@@ -92,7 +92,7 @@ while True:
                 in_collision.discard((b1,b2))
                 in_collision.discard((b2,b1))
 
-    mainBall.velocity = Vector(0,0)
+    mainBall.pos = Vector(width/2,height/2)
     mainBall.update(dt)
     # Render
     window.clear()
