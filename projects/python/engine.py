@@ -187,15 +187,18 @@ class Ball:
         self.centre = Vector((self.pos.x + self.radius), (self.pos.y + self.radius))
         self.prevPos = self.pos
         self.gravity = Vector(0,0.99)
+        self.affectedByGravity = True
 
     def update(self,dt):
+        if self.affectedByGravity:
             self.velocity += self.gravity
-            self.pos += self.velocity * dt
-            self.centre = Vector((self.pos.x + self.radius), (self.pos.y + self.radius))
-            self.prevPos = self.pos
+
+        self.pos += self.velocity * dt
+        self.centre = Vector((self.pos.x + self.radius), (self.pos.y + self.radius))
+        self.prevPos = self.pos
 
     def draw(self):
-        pygame.draw.circle(self.windowSurface, self.color, (self.pos.x, self.pos.y), self.radius)
+        pygame.draw.circle(self.windowSurface, self.color, (self.centre.x, self.centre.y), self.radius)
 
     def hit(self, ball):
         distance = ball.pos.copy().subtract(self.pos).length()
@@ -214,6 +217,15 @@ class Ball:
 
     def push(self,supposedVelocity):
         self.velocity += supposedVelocity
+
+    def calculateIntersection(self, point):
+        vectorToPoint = Vector(point.x - self.centre.x, point.y - self.centre.y)
+        distance = math.sqrt(vectorToPoint.x **2 + vectorToPoint.y **2)
+        normalisedVector = Vector(vectorToPoint.x / distance, vectorToPoint.y / distance)
+
+        intersectionPos = (self.centre.x + normalisedVector.x * self.radius, self.centre.y + normalisedVector.y * self.radius)
+
+        return intersectionPos
 
 
 def collide(self,other):
