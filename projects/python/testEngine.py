@@ -2,10 +2,17 @@ from engine import *
 from vector import *
 import random
 
+pygame.init()
 #window info
+useScreen = True
+screenWidth, screenHeight = pygame.display.Info().current_w, pygame.display.Info().current_h
 width = 1000
 height = 1000
-window = Window(width, height, 0, "Practice project")
+window = Window(width,height,0, "Practice project")
+if useScreen:
+    window = Window(screenWidth, screenHeight, pygame.FULLSCREEN, "Practice project")
+    width = screenWidth
+    height = screenHeight
 
 #player info
 playerSize = (200, 100)
@@ -65,6 +72,7 @@ while True:
                 for i in range(3):
                     color.append(random.randint(0,255))
                 newBall = Ball(window,Vector(mouseX,mouseY), -vectorNeeded, size, (color[0], color[1], color[2]))
+                newBall.affectedByGravity = False
                 balls.append(newBall)
 
             if event.button == pygame.BUTTON_RIGHT:
