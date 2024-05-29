@@ -83,7 +83,7 @@ while running:
         # if mouse moved
         elif event.type == pygame.MOUSEMOTION:
             mouseX,mouseY = event.pos
-            player.pos = Vector(mouseX - player.radius,mouseY - player.radius)
+            player.pos = Vector(mouseX,mouseY)
 
     # update
     dt = window.getDt()

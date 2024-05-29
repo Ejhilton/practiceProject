@@ -2,13 +2,22 @@ from engine import *
 from vector import *
 import random
 
-# Window info
+pygame.init()
+#window info
+useScreen = True
+screenWidth, screenHeight = pygame.display.Info().current_w, pygame.display.Info().current_h
 width = 1000
 height = 1000
-window = Window(width, height, 0, "Practice project")
+window = Window(width,height,0, "Practice project")
+if useScreen:
+    window = Window(screenWidth, screenHeight, pygame.FULLSCREEN, "Practice project")
+    width = screenWidth
+    height = screenHeight
 
 # Ball info
-mainBall = Ball(window,Vector(width/2,height/2), Vector(0, 0), 450, "Blue")
+radius = 200
+mainBall = Ball(window,Vector(width/2, height/2 ), Vector(0, 0), radius, "Blue")
+mainBall.affectedByGravity = False
 balls = [
 
 ]
@@ -68,7 +77,7 @@ while True:
         #if a ball hits inside of main ball
 
         if mainBall.hitInside(b1):
-            dirToCenter = Vector(b1.pos.x - width/2,b1.pos.y - height/2)
+            dirToCenter = Vector(b1.pos.x - mainBall.pos.x,b1.pos.y - mainBall.pos.y)
             #magnitude of objects current velocity
             magnitude = math.sqrt(b1.velocity.x * b1.velocity.x + b1.velocity.y * b1.velocity.y)
             #angle of the object to the collision point
@@ -92,7 +101,6 @@ while True:
                 in_collision.discard((b1,b2))
                 in_collision.discard((b2,b1))
 
-    mainBall.pos = Vector(width/2,height/2)
     mainBall.update(dt)
     # Render
     window.clear()

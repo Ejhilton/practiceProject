@@ -35,7 +35,7 @@ rectangles = [
 
 #player controls
 increaseSpeed = 10
-for i in range(0,1000):
+for i in range(0,10):
     color = []
     for i in range(3):
         color.append(random.randint(0,255))
