@@ -198,10 +198,10 @@ class Ball:
         self.prevPos = self.pos
 
     def draw(self):
-        pygame.draw.circle(self.windowSurface, self.color, (self.centre.x, self.centre.y), self.radius)
+        pygame.draw.circle(self.windowSurface, self.color, (self.pos.x, self.pos.y), self.radius)
 
     def hit(self, ball):
-        distance = ball.pos.copy().subtract(self.pos).length()
+        distance = ball.centre.copy().subtract(self.centre).length()
         return distance <= (self.radius + ball.radius)
 
     def hitInside(self,ball):
@@ -219,11 +219,11 @@ class Ball:
         self.velocity += supposedVelocity
 
     def calculateIntersection(self, point):
-        vectorToPoint = Vector(point.x - self.centre.x, point.y - self.centre.y)
+        vectorToPoint = Vector(point.x - self.pos.x, point.y - self.pos.y)
         distance = math.sqrt(vectorToPoint.x **2 + vectorToPoint.y **2)
         normalisedVector = Vector(vectorToPoint.x / distance, vectorToPoint.y / distance)
 
-        intersectionPos = (self.centre.x + normalisedVector.x * self.radius, self.centre.y + normalisedVector.y * self.radius)
+        intersectionPos = (self.pos.x + normalisedVector.x * self.radius, self.pos.y + normalisedVector.y * self.radius)
 
         return intersectionPos
 
