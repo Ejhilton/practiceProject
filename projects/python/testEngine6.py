@@ -20,6 +20,8 @@ playerSpeed = 500
 player = Ball(window, Vector(width/2, height/2), Vector(0, 0), 20, "Red")
 player.affectedByGravity = True
 player.lastClickPos = Vector(0,0)
+player.currentMousePos = Vector(0,0)
+player.showDirectionDrag = False
 
 # boundaries
 rectangleSize = (200,20)
@@ -87,6 +89,7 @@ while running:
             if event.button == pygame.BUTTON_LEFT:
                 mouseX,mouseY = event.pos
                 player.lastClickPos = Vector(mouseX, mouseY)
+                player.showDirectionDrag = True
 
             if event.button == pygame.BUTTON_RIGHT:
                 pass
@@ -96,11 +99,13 @@ while running:
                 currentX, currentY = event.pos
                 accelerationVector = -Vector(currentX - player.lastClickPos.x, currentY - player.lastClickPos.y)
                 player.velocity += accelerationVector
-
+                player.showDirectionDrag = False
 
         # if mouse moved
         elif event.type == pygame.MOUSEMOTION:
-            pass
+            mouseX,mouseY = event.pos
+            player.currentMousePos = Vector(mouseX, mouseY)
+
     # update
     dt = window.getDt()
     if pause == False:
@@ -137,5 +142,10 @@ while running:
     for boundary in boundaries:
         boundary.draw()
 
+    if player.showDirectionDrag:
+        #drawing line from initial click to current mouse position
+        startPoint = (player.currentMousePos.x,player.currentMousePos.y)
+        endPoint = (player.lastClickPos.x, player.lastClickPos.y)
+        pygame.draw.line(window.window, "Green", startPoint, endPoint, 10)
     window.swapBuffers()
 pygame.quit()
