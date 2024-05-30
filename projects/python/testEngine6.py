@@ -28,7 +28,17 @@ rectangles = [
     Rectangle(window, Vector(width/2 - rectangleSize[0]/2, 0), Vector(0,0), rectangleSize,"Blue")
 ]
 
+#boundary info
+boundaries = [
+    Rectangle(window, Vector(0, 0), Vector(0, 0), (width, 20), "Red"),
+    Rectangle(window, Vector(width - 20, 0), Vector(0, 0), (20, height), "Red"),
+    Rectangle(window, Vector(0, 0), Vector(0, 0), (20, height), "Red"),
+    Rectangle(window, Vector(0, height - 20), Vector(0, 0), (width, 20), "Red")
+]
 
+
+#collision tracking
+in_collision = set()
 
 pause = False
 running = True
@@ -84,7 +94,7 @@ while running:
         elif event.type == pygame.MOUSEBUTTONUP:
             if event.button == pygame.BUTTON_LEFT:
                 currentX, currentY = event.pos
-                accelerationVector = Vector(currentX - player.lastClickPos.x, currentY - player.lastClickPos.y)
+                accelerationVector = -Vector(currentX - player.lastClickPos.x, currentY - player.lastClickPos.y)
                 player.velocity += accelerationVector
 
 
@@ -101,6 +111,17 @@ while running:
 
             rectangle.update(dt)
 
+        for boundary in boundaries:
+                if boundary.hit(player):
+                    if (boundary, player) not in in_collision:
+                        normal = boundary.calculate_normal(player)
+                        player.bounce(normal)
+                    in_collision.add((boundary, player))
+                else:
+                    in_collision.discard((boundary, player))
+
+                boundary.update(dt)
+
         player.update(dt)
 
 
@@ -112,6 +133,9 @@ while running:
         rope = Rope(window, player.calculateIntersection(rectangle.centre), rectangleCentrePoint, 10)
         rope.draw()
         rectangle.draw()
+
+    for boundary in boundaries:
+        boundary.draw()
 
     window.swapBuffers()
 pygame.quit()
