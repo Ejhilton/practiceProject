@@ -24,18 +24,12 @@ player.currentMousePos = Vector(0,0)
 player.showDirectionDrag = False
 
 # boundaries
-rectangleSize = (200,20)
-rectangles = [
-    Rectangle(window, Vector(width/2 - rectangleSize[0]/2, height - rectangleSize[1]), Vector(0,0), rectangleSize,"Blue"),
-    Rectangle(window, Vector(width/2 - rectangleSize[0]/2, 0), Vector(0,0), rectangleSize,"Blue")
-]
-
-#boundary info
+boundaryColor = "Blue"
 boundaries = [
-    Rectangle(window, Vector(0, 0), Vector(0, 0), (width, 20), "Red"),
-    Rectangle(window, Vector(width - 20, 0), Vector(0, 0), (20, height), "Red"),
-    Rectangle(window, Vector(0, 0), Vector(0, 0), (20, height), "Red"),
-    Rectangle(window, Vector(0, height - 20), Vector(0, 0), (width, 20), "Red")
+    Rectangle(window, Vector(0, 0), Vector(0, 0), (width, 20), boundaryColor),
+    Rectangle(window, Vector(width - 20, 0), Vector(0, 0), (20, height), boundaryColor),
+    Rectangle(window, Vector(0, 0), Vector(0, 0), (20, height), boundaryColor),
+    Rectangle(window, Vector(0, height - 20), Vector(0, 0), (width, 20), boundaryColor)
 ]
 
 
@@ -110,11 +104,8 @@ while running:
     dt = window.getDt()
     if pause == False:
 
-        for rectangle in rectangles:
-            if rectangle.hit(player):
-                player.bounce(rectangle.calculate_normal(player))
-
-            rectangle.update(dt)
+        if player.centre.x < 0 or player.centre.x > width or player.centre.y < 0 or player.centre.y > height:
+                player.pos = Vector(width/2, height/2)
 
         for boundary in boundaries:
                 if boundary.hit(player):
@@ -133,13 +124,11 @@ while running:
     # render
     window.clear()
     player.draw()
-    for rectangle in rectangles:
-        rectangleCentrePoint = (rectangle.centre.x, rectangle.centre.y)
-        rope = Rope(window, player.calculateIntersection(rectangle.centre), rectangleCentrePoint, 10)
-        rope.draw()
-        rectangle.draw()
 
     for boundary in boundaries:
+        rectangleCentrePoint = (boundary.centre.x, boundary.centre.y)
+        rope = Rope(window, player.calculateIntersection(boundary.centre), rectangleCentrePoint, 10)
+        rope.draw()
         boundary.draw()
 
     if player.showDirectionDrag:

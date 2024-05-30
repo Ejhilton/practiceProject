@@ -185,7 +185,7 @@ class Ball:
         self.radius = radius
         self.color = color
         self.centre = Vector((self.pos.x + self.radius), (self.pos.y + self.radius))
-        self.prevPos = self.pos
+        self.lastPos = self.pos
         self.gravity = Vector(0,0.9)
         self.affectedByGravity = True
 
@@ -195,7 +195,7 @@ class Ball:
 
         self.pos += self.velocity * dt
         self.centre = Vector((self.pos.x + self.radius), (self.pos.y + self.radius))
-        self.prevPos = self.pos
+        self.lastPos = self.pos
 
     def draw(self):
         pygame.draw.circle(self.windowSurface, self.color, (self.pos.x, self.pos.y), self.radius)
