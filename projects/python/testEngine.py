@@ -4,7 +4,7 @@ import random
 
 pygame.init()
 #window info
-useScreen = True
+useScreen = False
 screenWidth, screenHeight = pygame.display.Info().current_w, pygame.display.Info().current_h
 width = 1000
 height = 1000
