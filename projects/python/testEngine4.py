@@ -143,6 +143,5 @@ while running:
     for rectangle in rectangles:
         rectangle.draw()
     window.swapBuffers()
-    print(len(balls))
 
 pygame.quit()
