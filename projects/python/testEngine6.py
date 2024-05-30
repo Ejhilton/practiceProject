@@ -18,7 +18,8 @@ if useScreen:
 playerSize = (200, 100)
 playerSpeed = 500
 player = Ball(window, Vector(width/2, height/2), Vector(0, 0), 20, "Red")
-player.affectedByGravity = False
+player.affectedByGravity = True
+player.lastClickPos = Vector(0,0)
 
 # boundaries
 rectangleSize = (200,20)
@@ -74,17 +75,22 @@ while running:
         # if mouse pressed
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == pygame.BUTTON_LEFT:
-                pass
+                mouseX,mouseY = event.pos
+                player.lastClickPos = Vector(mouseX, mouseY)
 
             if event.button == pygame.BUTTON_RIGHT:
                 pass
 
+        elif event.type == pygame.MOUSEBUTTONUP:
+            if event.button == pygame.BUTTON_LEFT:
+                currentX, currentY = event.pos
+                accelerationVector = Vector(currentX - player.lastClickPos.x, currentY - player.lastClickPos.y)
+                player.velocity += accelerationVector
+
 
         # if mouse moved
         elif event.type == pygame.MOUSEMOTION:
-            mouseX,mouseY = event.pos
-            player.pos = Vector(mouseX - player.radius,mouseY - player.radius)
-
+            pass
     # update
     dt = window.getDt()
     if pause == False:
@@ -103,7 +109,8 @@ while running:
     player.draw()
     for rectangle in rectangles:
         rectangleCentrePoint = (rectangle.centre.x, rectangle.centre.y)
-        pygame.draw.line(window.window, "Green", player.calculateIntersection(rectangle.centre), rectangleCentrePoint, 10)
+        rope = Rope(window, player.calculateIntersection(rectangle.centre), rectangleCentrePoint, 10)
+        rope.draw()
         rectangle.draw()
 
     window.swapBuffers()
