@@ -186,7 +186,7 @@ class Ball:
         self.color = color
         self.centre = Vector((self.pos.x + self.radius), (self.pos.y + self.radius))
         self.prevPos = self.pos
-        self.gravity = Vector(0,0.99)
+        self.gravity = Vector(0,0.9)
         self.affectedByGravity = True
 
     def update(self,dt):
@@ -226,6 +226,16 @@ class Ball:
         intersectionPos = (self.pos.x + normalisedVector.x * self.radius, self.pos.y + normalisedVector.y * self.radius)
 
         return intersectionPos
+
+class Rope:
+    def __init__(self, window, start, end, width):
+        self.start = start
+        self.end = end
+        self.width = width
+        self.window = window
+        self.windowSurface = window.window
+    def draw(self):
+        pygame.draw.line(self.windowSurface, "Green", self.start, self.end, 10)
 
 
 def collide(self,other):
