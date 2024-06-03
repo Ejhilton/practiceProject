@@ -2,6 +2,20 @@ import pygame
 import time
 from vector import *
 
+
+class Camera:
+    def __init__(self,player, width,height):
+        self.player = player
+        self.offset = Vector(0, 0)
+        self.width = width
+        self.height = height
+    def update(self):
+        self.offset.x = self.player.pos.x - self.width / 2
+        self.offset.y = self.player.pos.y - self.height / 2
+
+    def apply(self,pos):
+        return pos - self.offset
+
 class Point:
     def __init__(self, x, y, data=None):
         self.x = x
