@@ -39,6 +39,7 @@ while True:
                 for ball in balls:
                     previousVelocities.append(ball.velocity)
                     ball.velocity = Vector(0, 0)
+                    ball.affectedByGravity = False
 
         # If keyup
         elif event.type == pygame.KEYUP:
@@ -47,6 +48,7 @@ while True:
                 for ball in balls:
                     ball.velocity += previousVelocities[i]
                     i += 1
+                    ball.affectedByGravity = True
                 previousVelocities = []
 
         # If left-click
@@ -66,6 +68,7 @@ while True:
 
     # Update
     dt = window.getDt()
+
     for ball in balls:
         #if ball goes offscreen
         if ball.centre.x < 0 or ball.centre.x > width or ball.centre.y < 0 or ball.centre.y > height:
@@ -77,14 +80,19 @@ while True:
         #if a ball hits inside of main ball
 
         if mainBall.hitInside(b1):
-            dirToCenter = Vector(b1.pos.x - mainBall.pos.x,b1.pos.y - mainBall.pos.y)
-            #magnitude of objects current velocity
-            magnitude = math.sqrt(b1.velocity.x * b1.velocity.x + b1.velocity.y * b1.velocity.y)
-            #angle of the object to the collision point
-            angleToCollisionPoint = math.atan2(-dirToCenter.y,dirToCenter.x)
-            oldAngle = math.atan2(-b1.velocity.y,b1.velocity.x)
-            newAngle = 2 * angleToCollisionPoint - oldAngle
-            b1.velocity = Vector(-magnitude * math.cos(newAngle),magnitude * math.sin(newAngle))
+            mainBallb1 = (mainBall, b1) in in_collision
+            if not mainBallb1:
+                dirToCenter = Vector(b1.pos.x - mainBall.pos.x, b1.pos.y - mainBall.pos.y)
+                #magnitude of objects current velocity
+                magnitude = math.sqrt(b1.velocity.x * b1.velocity.x + b1.velocity.y * b1.velocity.y)
+                #angle of the object to the collision point
+                angleToCollisionPoint = math.atan2(-dirToCenter.y,dirToCenter.x)
+                oldAngle = math.atan2(-b1.velocity.y, b1.velocity.x)
+                newAngle = 2 * angleToCollisionPoint - oldAngle
+                b1.velocity = Vector(-magnitude * math.cos(newAngle), magnitude * math.sin(newAngle))
+            in_collision.add((mainBall,b1))
+        else:
+            in_collision.discard((mainBall,b1))
 
         #if a ball hits another ball
         for b2 in balls:
