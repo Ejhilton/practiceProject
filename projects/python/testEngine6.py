@@ -32,6 +32,9 @@ boundaries = [
     Rectangle(window, Vector(0, height - 20), Vector(0, 0), (width, 20), boundaryColor)
 ]
 
+# camera
+camera = Camera(player, width, height)
+
 
 #collision tracking
 in_collision = set()
@@ -52,10 +55,10 @@ while running:
                 running = False
 
             if event.key == pygame.K_LEFT:
-                player.velocity += Vector(-playerSpeed,0)
+                player.velocity += Vector(-playerSpeed, 0)
 
             elif event.key == pygame.K_RIGHT:
-                player.velocity += Vector(playerSpeed,0)
+                player.velocity += Vector(playerSpeed, 0)
 
             elif event.key == pygame.K_SPACE:
                 pause = True
@@ -70,10 +73,10 @@ while running:
         # if keyup
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT:
-                player.velocity += Vector(playerSpeed,0)
+                player.velocity += Vector(playerSpeed, 0)
 
             elif event.key == pygame.K_RIGHT:
-                player.velocity += Vector(-playerSpeed,0)
+                player.velocity += Vector(-playerSpeed, 0)
 
             elif event.key == pygame.K_SPACE:
                 pause = False
@@ -104,28 +107,30 @@ while running:
     dt = window.getDt()
     if pause == False:
 
-        if player.centre.x < 0 or player.centre.x > width or player.centre.y < 0 or player.centre.y > height:
-                player.pos = Vector(width/2, height/2)
-
         for boundary in boundaries:
-                if boundary.hit(player):
-                    if (boundary, player) not in in_collision:
-                        normal = boundary.calculate_normal(player)
-                        player.bounce(normal)
-                    in_collision.add((boundary, player))
-                else:
-                    in_collision.discard((boundary, player))
+            if boundary.hit(player):
+                if (boundary, player) not in in_collision:
+                    normal = boundary.calculate_normal(player)
+                    player.bounce(normal)
+                in_collision.add((boundary, player))
+            else:
+                in_collision.discard((boundary, player))
 
-                boundary.update(dt)
+            boundary.update(dt)
 
         player.update(dt)
-
+        camera.update()
 
     # render
     window.clear()
+
+    playerPos = camera.apply(player.pos)
+    player.pos = playerPos
     player.draw()
 
     for boundary in boundaries:
+        boundaryPos = camera.apply(boundary.pos)
+        boundary.pos = boundaryPos
         rectangleCentrePoint = (boundary.centre.x, boundary.centre.y)
         rope = Rope(window, player.calculateIntersection(boundary.centre), rectangleCentrePoint, 10)
         rope.draw()
