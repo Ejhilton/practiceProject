@@ -2,7 +2,6 @@ import pygame
 import time
 from vector import *
 
-
 class Camera:
     def __init__(self,player, width,height):
         self.player = player
@@ -250,6 +249,31 @@ class Rope:
         self.windowSurface = window.window
     def draw(self):
         pygame.draw.line(self.windowSurface, "Green", self.start, self.end, 10)
+
+
+
+class Map:
+    def __init__(self, window, topLeft, width, height, color, boundarySize):
+        self.boundaries = []
+        self.topLeft = topLeft
+        self.width = width
+        self.height = height
+        self.color = color
+        self.boundarySize = boundarySize
+        self.window = window
+        self.windowSurface = window.window
+
+    def add(self,boundary):
+        self.boundaries.append(boundary)
+
+    def addOutsideBoundaries(self):
+        self.add(Rectangle(self.window, Vector(self.topLeft.x, self.topLeft.y), Vector(0, 0), (self.width, self.boundarySize), self.color))
+        self.add(Rectangle(self.window, Vector(self.width - self.boundarySize, 0), Vector(0, 0), (self.boundarySize, self.height), self.color))
+        self.add(Rectangle(self.window, Vector(self.topLeft.x, self.topLeft.y), Vector(0, 0), (self.boundarySize, self.height), self.color))
+        self.add(Rectangle(self.window, Vector(self.topLeft.x, self.height - self.boundarySize), Vector(0, 0), (self.width, self.boundarySize), self.color))
+
+    def clear(self):
+        self.boundaries = []
 
 
 def collide(self,other):
