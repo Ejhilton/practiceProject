@@ -25,12 +25,10 @@ player.showDirectionDrag = False
 
 # boundaries
 boundaryColor = "Blue"
-boundaries = [
-    Rectangle(window, Vector(0, 0), Vector(0, 0), (width, 20), boundaryColor),
-    Rectangle(window, Vector(width - 20, 0), Vector(0, 0), (20, height), boundaryColor),
-    Rectangle(window, Vector(0, 0), Vector(0, 0), (20, height), boundaryColor),
-    Rectangle(window, Vector(0, height - 20), Vector(0, 0), (width, 20), boundaryColor)
-]
+
+# map details
+map = Map(window,Vector(0, 0), 10000, 10000, "Red", 10)
+map.addOutsideBoundaries()
 
 # camera
 camera = Camera(player, width, height)
@@ -107,11 +105,12 @@ while running:
     dt = window.getDt()
     if pause == False:
 
-        for boundary in boundaries:
+        for boundary in map.boundaries:
             if boundary.hit(player):
                 if (boundary, player) not in in_collision:
                     normal = boundary.calculate_normal(player)
                     player.bounce(normal)
+                    player.pos = player.lastPos
                 in_collision.add((boundary, player))
             else:
                 in_collision.discard((boundary, player))
@@ -128,7 +127,7 @@ while running:
     player.pos = playerPos
     player.draw()
 
-    for boundary in boundaries:
+    for boundary in map.boundaries:
         boundaryPos = camera.apply(boundary.pos)
         boundary.pos = boundaryPos
         rectangleCentrePoint = (boundary.centre.x, boundary.centre.y)
