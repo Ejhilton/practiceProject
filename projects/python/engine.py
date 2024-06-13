@@ -214,7 +214,7 @@ class Ball:
         pygame.draw.circle(self.windowSurface, self.color, (self.pos.x, self.pos.y), self.radius)
 
     def hit(self, ball):
-        distance = ball.centre.copy().subtract(self.centre).length()
+        distance = ball.pos.copy().subtract(self.pos).length()
         return distance <= (self.radius + ball.radius)
 
     def hitInside(self,ball):

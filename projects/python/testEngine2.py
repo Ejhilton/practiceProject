@@ -15,7 +15,7 @@ if useScreen:
     height = screenHeight
 
 # Ball info
-radius = 200
+radius = 485
 mainBall = Ball(window,Vector(width/2, height/2 ), Vector(0, 0), radius, "Blue")
 mainBall.affectedByGravity = False
 balls = [
